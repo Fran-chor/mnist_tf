@@ -75,26 +75,24 @@ def preprocessing(data, labels):
 
 
 def main():
+
     # Get the data and their information
     training_images, training_labels = load_mnist("train", "./data")
     test_images, test_labels = load_mnist("t10k", "./data")
-    print('Before preprocessing:')
-    print_info('Train set:', training_images, training_labels)
-    print_info('Test set:', test_images, test_labels)
+    print("Before preprocessing:")
+    print_info("Train set:", training_images, training_labels)
+    print_info("Test set:", test_images, test_labels)
     show_images(training_images, training_labels, 3, 10, 0)
 
     # Preprocessing on the data
     x_train, y_train = preprocessing(training_images, training_labels)
     x_test, y_test = preprocessing(test_images, test_labels)
-    print('After preprocessing:')
-    print_info('Train set:', x_train, y_train)
-    print_info('Test set:', x_test, y_test)
+    print("After preprocessing:")
+    print_info("Train set:", x_train, y_train)
+    print_info("Test set:", x_test, y_test)
     show_images(x_train, y_train, 3, 10, 0)
 
-    # todo git
-    # todo Generator in tf
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
 

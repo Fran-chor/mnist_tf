@@ -1,2 +1,3 @@
 # mnist_tf
-Classification of the mnist dataset with tensorflow and pycharm
+Classification of the MNIST dataset.
+To learn TensorFlow, but also PyCharm and GitHub.

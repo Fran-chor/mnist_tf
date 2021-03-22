@@ -74,6 +74,9 @@ def preprocessing(data, labels):
     return data, labels
 
 
+# TODO Make a tensorflow dataset
+
+
 def main():
 
     # Get the data and their information

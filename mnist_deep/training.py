@@ -1,12 +1,8 @@
 import tensorflow as tf
 import matplotlib.pyplot as plt
 
-# TODO test and see the difference with and without eager mode
+# TODO test and see the difference with and without eager mode (add a time criteria too)
 # TODO Add the curves of the losses and metrics, make it work without eager mode
-
-# Useful to debug when it's True
-# TODO Put False when it's working
-tf.config.run_functions_eagerly(True)
 
 
 @tf.function
@@ -58,7 +54,9 @@ def train(mod, train_ds, valid_ds, opt, loss_fn, epo, train_loss, train_metric, 
         )
 
 
-def initialization():
+def initialization(eager_mode):
+    tf.config.run_functions_eagerly(eager_mode)
+
     optimizer = tf.keras.optimizers.Adam()
     loss_fn = tf.keras.losses.CategoricalCrossentropy()
 

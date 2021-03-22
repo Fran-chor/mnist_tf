@@ -1,5 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import tensorflow as tf
+
+
+# TODO Do not put all the data in the memory
 
 
 def load_mnist(prefix, folder):
@@ -39,11 +43,11 @@ def load_mnist(prefix, folder):
 
 def print_info(to_print, data, labels):
     print(to_print)
-    print('    data.shape:   ', data.shape)
-    print('    labels.shape: ', labels.shape)
-    print('    pixel\'s type:', data.dtype)
-    print('    pixel\'s max: ', np.amax(data))
-    print('    label\'s type:', labels.dtype)
+    print('        data.shape:   ', data.shape)
+    print('        labels.shape: ', labels.shape)
+    print('        pixel\'s type:', data.dtype)
+    print('        pixel\'s max: ', np.amax(data))
+    print('        label\'s type:', labels.dtype)
 
 
 def show_images(data, labels, rows, cols, start):
@@ -74,26 +78,65 @@ def preprocessing(data, labels):
     return data, labels
 
 
-# TODO Make a tensorflow dataset
+def make_dataset(training_images, training_labels, test_images, test_labels, batch_size=32):
+
+    # Conversion to tensor
+    training_images = tf.convert_to_tensor(training_images)
+    training_labels = tf.convert_to_tensor(training_labels)
+    test_images = tf.convert_to_tensor(test_images)
+    test_labels = tf.convert_to_tensor(test_labels)
+
+    # Adding a 4th dimension
+    training_images = tf.expand_dims(training_images, axis=-1)
+    test_images = tf.expand_dims(test_images, axis=-1)
+
+    # One Hot Vector for the labels
+    training_labels = tf.one_hot(training_labels, 10)
+    test_labels = tf.one_hot(test_labels, 10)
+
+    # Create Dataset
+    train_ds = tf.data.Dataset.from_tensor_slices((training_images, training_labels)).batch(batch_size)
+    test_ds = tf.data.Dataset.from_tensor_slices((test_images, test_labels)).batch(batch_size)
+
+    return train_ds, test_ds
+
+
+def load_mnist_dataset():
+
+    # Get the data from the disk
+    training_images, training_labels = load_mnist("train", "./data")
+    test_images, test_labels = load_mnist("t10k", "./data")
+
+    # Little preprocessing
+    training_images, training_labels = preprocessing(training_images, training_labels)
+    test_images, test_labels = preprocessing(test_images, test_labels)
+
+    # Make a dataset object
+    train_ds, test_ds = make_dataset(training_images, training_labels, test_images, test_labels)
+
+    return train_ds, test_ds
 
 
 def main():
 
     # Get the data and their information
-    training_images, training_labels = load_mnist("train", "./data")
-    test_images, test_labels = load_mnist("t10k", "./data")
+    training_images, training_labels = load_mnist("train", "../data")
+    test_images, test_labels = load_mnist("t10k", "../data")
     print("Before preprocessing:")
-    print_info("Train set:", training_images, training_labels)
-    print_info("Test set:", test_images, test_labels)
+    print_info("    Train set:", training_images, training_labels)
+    print_info("    Test set:", test_images, test_labels)
     show_images(training_images, training_labels, 3, 10, 0)
 
-    # Preprocessing on the data
-    x_train, y_train = preprocessing(training_images, training_labels)
-    x_test, y_test = preprocessing(test_images, test_labels)
+    # Little preprocessing
+    training_images, training_labels = preprocessing(training_images, training_labels)
+    test_images, test_labels = preprocessing(test_images, test_labels)
     print("After preprocessing:")
-    print_info("Train set:", x_train, y_train)
-    print_info("Test set:", x_test, y_test)
-    show_images(x_train, y_train, 3, 10, 0)
+    print_info("    Train set:", training_images, training_labels)
+    print_info("    Test set:", test_images, test_labels)
+    show_images(training_images, training_labels, 3, 10, 0)
+
+    # Make a dataset object
+    train_ds, test_ds = make_dataset(training_images, training_labels, test_images, test_labels)
 
 
 if __name__ == "__main__":

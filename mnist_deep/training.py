@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 
 # TODO test and see the difference with and without eager mode (add a time criteria too)
 # TODO Add the curves of the losses and metrics, make it work without eager mode
+# TODO use Tensorboard to plot the curves, see the tutorial in the github (my favorites)
 
 
 @tf.function
@@ -46,12 +47,18 @@ def train(mod, train_ds, valid_ds, opt, loss_fn, epo, train_loss, train_metric, 
             valid_step(mod, loss_fn, x, y, valid_loss, valid_metric)
 
         tf.print(
-            f'Epoch {e + 1}, '
-            f'Loss: {train_loss.result()}, '
-            f'Accuracy: {train_metric.result() * 100}, '
-            f'Valid Loss: {valid_loss.result()}, '
-            f'Valid Accuracy: {valid_metric.result() * 100}'
+            "Epoch {:03d},".format(e+1),
+            "Loss: {:.4f},".format(train_loss.result()),
+            "Accuracy: {:.2%},".format(train_metric.result()),
+            "Valid Loss: {:.4f},".format(valid_loss.result()),
+            "Valid Accuracy: {:.2%}".format(valid_metric.result())
         )
+
+    # TODO Tous les tester
+    # TODO ajouter save_weight aussi
+    mod.save("./saved_models/trained_model")
+    # mod.save("./saved_models/trained_model", include_optimizer=False)
+    # tf.saved_model.save(mod, './saved_models/')
 
 
 def initialization(eager_mode):

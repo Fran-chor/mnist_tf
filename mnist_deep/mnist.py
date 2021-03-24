@@ -4,6 +4,7 @@ import tensorflow as tf
 
 
 # TODO Do not put all the data in the memory
+# TODO See if the shuffle method of Dataset could shuffle the batches at every epoch
 
 
 def load_mnist(prefix, folder):
@@ -95,7 +96,8 @@ def make_dataset(training_images, training_labels, test_images, test_labels, bat
     test_labels = tf.one_hot(test_labels, 10)
 
     # Create Dataset
-    train_ds = tf.data.Dataset.from_tensor_slices((training_images, training_labels)).batch(batch_size)
+    train_ds = tf.data.Dataset.from_tensor_slices((training_images, training_labels))\
+        .shuffle(10000).batch(batch_size).prefetch(2)
     test_ds = tf.data.Dataset.from_tensor_slices((test_images, test_labels)).batch(batch_size)
 
     return train_ds, test_ds

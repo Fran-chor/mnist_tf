@@ -19,9 +19,9 @@ def main():
 
     train_ds, test_ds = mnist.load_mnist_dataset()
 
-    if running == "training":
+    model = my_models.basic_cnn()
 
-        model = my_models.basic_cnn()
+    if running == "training":
 
         optimizer, loss_fn, train_loss, train_metric, valid_loss, valid_metric = \
             training.initialization(eager_mode)
@@ -31,13 +31,9 @@ def main():
 
     elif running == "analysis":
 
-        # TODO Tous les tester
-        # TODO ajouter load_weight aussi
-        model = load_model("saved_models/trained_model")
-        # model = load_model("saved_models/trained_model", compile=False)
-        # imported = tf.saved_model.load("./saved_models/")
+        my_models.load_trained_model(model)
 
-        analysis.get_perf_rank(model, test_ds, 1)
+        analysis.get_accuracy(model, test_ds)
 
 
 # Press the green button in the gutter to run the script.

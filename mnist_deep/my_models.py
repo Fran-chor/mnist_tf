@@ -19,6 +19,20 @@ def basic_cnn(input_dim=(28, 28, 1)):
     return model
 
 
+def save_trained_model(model):
+    # mod.save("./saved_models/trained_model")
+    # mod.save("./saved_models/trained_model", include_optimizer=False)
+    model.save_weights("./saved_models/trained_model/")
+    # tf.saved_model.save(mod, './saved_models/trained_model')
+
+
+def load_trained_model(model):
+    # model = load_model("./saved_models/trained_model/")
+    # model = load_model("./saved_models/trained_model/", compile=False)
+    model.load_weights("./saved_models/trained_model/")
+    # model = tf.saved_model.load("./saved_models/trained_model")
+
+
 def main():
     model = basic_cnn()
     model.summary()

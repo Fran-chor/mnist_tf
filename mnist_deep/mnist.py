@@ -3,10 +3,6 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 
 
-# TODO Do not put all the data in the memory
-# TODO See if the shuffle method of Dataset could shuffle the batches at every epoch
-
-
 def load_mnist(prefix, folder):
     int_type = np.dtype('int32').newbyteorder('>')
     n_meta_data_bytes = 4 * int_type.itemsize
@@ -98,7 +94,8 @@ def make_dataset(training_images, training_labels, test_images, test_labels, bat
     # Create Dataset
     train_ds = tf.data.Dataset.from_tensor_slices((training_images, training_labels))\
         .shuffle(10000).batch(batch_size).prefetch(2)
-    test_ds = tf.data.Dataset.from_tensor_slices((test_images, test_labels)).batch(batch_size)
+    test_ds = tf.data.Dataset.from_tensor_slices((test_images, test_labels))\
+        .batch(batch_size).prefetch(2)
 
     return train_ds, test_ds
 

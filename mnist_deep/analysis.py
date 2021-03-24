@@ -1,4 +1,5 @@
 import numpy as np
+import tensorflow as tf
 
 
 def get_pred_and_labels(dataset, model):
@@ -24,19 +25,15 @@ def get_perf_rank(model, dataset, rank):
     print("Performance Rank {}: {:.2%}".format(rank, perf))
 
 
-# TODO Remake the performance computer using the following code
-# If well done, we could have only one batch at a time in the memory
-
-# test_accuracy = tf.keras.metrics.Accuracy()
-#
-# for (x, y) in test_dataset:
-#   # training=False is needed only if there are layers with different
-#   # behavior during training versus inference (e.g. Dropout).
-#   logits = model(x, training=False)
-#   prediction = tf.argmax(logits, axis=1, output_type=tf.int32)
-#   test_accuracy(prediction, y)
-#
-# print("Test set accuracy: {:.3%}".format(test_accuracy.result()))
+# Favor the use of this method
+def get_accuracy(model, dataset):
+    accuracy = tf.metrics.Accuracy()
+    for x, y in dataset:
+        prob = model(x, training=False)
+        pred = tf.argmax(prob, axis=1, output_type=tf.int32)
+        labels = tf.argmax(y, axis=1, output_type=tf.int32)
+        accuracy(pred, labels)
+    print("Accuracy: {:.2%}".format(accuracy.result()))
 
 
 def main():

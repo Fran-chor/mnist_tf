@@ -1,5 +1,6 @@
 import tensorflow as tf
 import matplotlib.pyplot as plt
+import mnist_deep.my_models as my_models
 
 # TODO test and see the difference with and without eager mode (add a time criteria too)
 # TODO Add the curves of the losses and metrics, make it work without eager mode
@@ -54,11 +55,7 @@ def train(mod, train_ds, valid_ds, opt, loss_fn, epo, train_loss, train_metric, 
             "Valid Accuracy: {:.2%}".format(valid_metric.result())
         )
 
-    # TODO Tous les tester
-    # TODO ajouter save_weight aussi
-    mod.save("./saved_models/trained_model")
-    # mod.save("./saved_models/trained_model", include_optimizer=False)
-    # tf.saved_model.save(mod, './saved_models/')
+    my_models.save_trained_model(mod)
 
 
 def initialization(eager_mode):

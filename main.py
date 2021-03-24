@@ -1,5 +1,7 @@
 import getopt
 import sys
+import matplotlib.pyplot as plt
+import tensorflow as tf
 
 import mnist_deep.analysis as analysis
 import mnist_deep.mnist as mnist
@@ -8,7 +10,6 @@ import mnist_deep.training as training
 
 
 # TODO See the tutorial on github (in my favorites) to improve this code
-# For instance, using repeat in the dataset and doing by step instead of epoch ???
 # TODO See how to do a Notebooks
 
 def usage():
@@ -60,12 +61,21 @@ def main():
         optimizer, loss_fn, train_loss, train_metric, valid_loss, valid_metric = \
             training.initialization(eager_mode)
 
-        training.train(model, train_ds, test_ds, optimizer, loss_fn, epochs,
-                       train_loss, train_metric, valid_loss, valid_metric)
+        train_loss_results, train_metric_results, valid_loss_results, valid_metric_results = \
+            training.train(model, train_ds, test_ds, optimizer, loss_fn, epochs,
+                           train_loss, train_metric, valid_loss, valid_metric)
+
+        training.plot_curves(train_loss_results, valid_loss_results, "loss")
+        training.plot_curves(train_metric_results, valid_metric_results, "accuracy")
+
+        # Necessary to keep the figures open
+        plt.show()
 
     elif mode == "analysis":
 
         my_models.load_trained_model(model)
+
+        tf.config.run_functions_eagerly(eager_mode)
 
         analysis.get_accuracy(model, test_ds)
 

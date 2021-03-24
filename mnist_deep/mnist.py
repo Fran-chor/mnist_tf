@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 
 
+# To load in numpy array the data and labels from the files on the disk
 def load_mnist(prefix, folder):
     int_type = np.dtype('int32').newbyteorder('>')
     n_meta_data_bytes = 4 * int_type.itemsize
@@ -38,6 +39,7 @@ def load_mnist(prefix, folder):
 #     return nb_train, nb_test, size, p_type, l_type
 
 
+# To see if everything is alright
 def print_info(to_print, data, labels):
     print(to_print)
     print('        data.shape:   ', data.shape)
@@ -47,6 +49,7 @@ def print_info(to_print, data, labels):
     print('        label\'s type:', labels.dtype)
 
 
+# To see if everything is alright
 def show_images(data, labels, rows, cols, start):
     plt.figure()
     for i in range(rows):
@@ -61,6 +64,9 @@ def show_images(data, labels, rows, cols, start):
     plt.show()
 
 
+# To shuffle and Normalize the data
+# Take and return numpy arrays
+# Shuffling maybe not necessary, done in the dataset
 def preprocessing(data, labels):
 
     # Shuffle
@@ -75,6 +81,9 @@ def preprocessing(data, labels):
     return data, labels
 
 
+# To convert the numpy arrays to tensor and then convert them into dataset
+# .shuffle(), .batch() and .prefetch() are important
+# .prefetch enables (probably) to not to put everything in the memory
 def make_dataset(training_images, training_labels, test_images, test_labels, batch_size=32):
 
     # Conversion to tensor
@@ -100,6 +109,7 @@ def make_dataset(training_images, training_labels, test_images, test_labels, bat
     return train_ds, test_ds
 
 
+# The whole process to convert the files on the disk into datasets
 def load_mnist_dataset():
 
     # Get the data from the disk
@@ -116,6 +126,7 @@ def load_mnist_dataset():
     return train_ds, test_ds
 
 
+# To verify that the functions here are working
 def main():
 
     # Get the data and their information

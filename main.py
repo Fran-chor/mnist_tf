@@ -8,16 +8,18 @@ import mnist_deep.mnist as mnist
 import mnist_deep.my_models as my_models
 import mnist_deep.training as training
 
+# To see tensorboard
+# tensorboard --logdir=logs/gradient_tape
 
-# TODO See the tutorial on github (in my favorites) to improve this code
-# TODO See how to do a Notebooks
 
+# To explain how to use this script
 def usage():
     print("Usage: {} -m <training/analysis> -e <epochs>".format(sys.argv[0]))
     print("-g to use the graphs mode (eager_mode by default)")
     print("-h to print the usage")
 
 
+# To get and assign the values of the arguments
 def get_args():
     try:
         opts, args = getopt.getopt(sys.argv[1:], "hm:ge:", ["help", "mode=", "graphs", "epochs="])
@@ -47,6 +49,7 @@ def get_args():
     return mode, graphs, epochs
 
 
+# The main script
 def main():
 
     mode, graphs, epochs = get_args()
@@ -58,12 +61,12 @@ def main():
 
     if mode == "training":
 
-        optimizer, loss_fn, train_loss, train_metric, valid_loss, valid_metric = \
-            training.initialization(eager_mode)
+        optimizer, loss_fn, train_loss, train_metric, valid_loss, valid_metric, \
+            train_summary_writer, valid_summary_writer = training.initialization(eager_mode)
 
         train_loss_results, train_metric_results, valid_loss_results, valid_metric_results = \
-            training.train(model, train_ds, test_ds, optimizer, loss_fn, epochs,
-                           train_loss, train_metric, valid_loss, valid_metric)
+            training.train(model, train_ds, test_ds, optimizer, loss_fn, epochs, train_loss, train_metric,
+                           valid_loss, valid_metric, train_summary_writer, valid_summary_writer)
 
         training.plot_curves(train_loss_results, valid_loss_results, "loss")
         training.plot_curves(train_metric_results, valid_metric_results, "accuracy")

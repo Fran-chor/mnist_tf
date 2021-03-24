@@ -3,6 +3,24 @@ import tensorflow as tf
 from mnist_deep.utils import tfw_print
 
 
+# Favor the use of this method
+def get_accuracy(model, dataset):
+    accuracy = tf.metrics.Accuracy()
+    for x, y in dataset:
+        labels, pred = get_pred_and_labels(model, x, y)
+        accuracy(pred, labels)
+    # Using print would be better, tf.print not necessary here
+    tfw_print("Accuracy: {:.2%}".format(accuracy.result()))
+
+
+@tf.function
+def get_pred_and_labels(model, x, y):
+    prob = model(x, training=False)
+    pred = tf.argmax(prob, axis=1, output_type=tf.int32)
+    labels = tf.argmax(y, axis=1, output_type=tf.int32)
+    return labels, pred
+
+
 def get_pred_and_labels2(dataset, model):
     images, labels = tuple(zip(*dataset))
     images = np.concatenate([i for i in images], axis=0)
@@ -23,24 +41,6 @@ def get_perf_rank(model, dataset, rank):
         correct.append(labels[i] in idx_pred)
     perf = sum(correct) / nb_test
     print("Performance Rank {}: {:.2%}".format(rank, perf))
-
-
-@tf.function
-def get_pred_and_labels(model, x, y):
-    prob = model(x, training=False)
-    pred = tf.argmax(prob, axis=1, output_type=tf.int32)
-    labels = tf.argmax(y, axis=1, output_type=tf.int32)
-    return labels, pred
-
-
-# Favor the use of this method
-def get_accuracy(model, dataset):
-    accuracy = tf.metrics.Accuracy()
-    for x, y in dataset:
-        labels, pred = get_pred_and_labels(model, x, y)
-        accuracy(pred, labels)
-    # Using print would be better, tf.print not necessary here
-    tfw_print("Accuracy: {:.2%}".format(accuracy.result()))
 
 
 def main():
